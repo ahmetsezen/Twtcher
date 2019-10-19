@@ -1,0 +1,26 @@
+html {
+    overflow-y: scroll; 
+}
+h3 {
+  color: rgb(203, 202, 204);
+  font-size: 30px;
+  padding:5px;
+}
+h5 {
+    color:#9147ff;
+    padding:5px;
+}
+.jumbotron {
+  padding: 30;
+}
+.card {
+   border: none;
+}
+.card:hover{
+    cursor: pointer;
+    background-color: #9147ff;
+    h5 {
+        color:white;
+    }
+}
+
