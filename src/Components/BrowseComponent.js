@@ -110,7 +110,7 @@ class BrowseComponent extends Component {
                         </ModalBody>
                     </Modal>
                 </div>
-                <div className="jumbotron">
+                <div className="jumbotron" style={{padding:50}}>
                     <h3 className="text-left"> Most Popular Games </h3>
                     <h5 className="text-left"> Click the game name and reach all popular live streams which is related game </h5>
                     <Slider {...SliderSettings}>
@@ -126,7 +126,7 @@ class BrowseComponent extends Component {
                         }
                     </Slider>
                 </div>
-                <div className="jumbotron">
+                <div className="jumbotron" style={{padding:50}}>
                     <h3 className="text-left">Most Popular Streamers </h3>
                     <h5 className="text-left">Just click on the stream name which is you want to watch </h5>
                     <Slider {...SliderSettings}>

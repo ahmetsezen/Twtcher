@@ -123,7 +123,7 @@ class LiveNow extends Component {
                         </ModalBody>
                     </Modal>
                 </div>
-                <div className="jumbotron">
+                <div className="jumbotron" style={{padding:50}}>
                     <h3 className="text-left"> Top 20 Games </h3>
                     <h5 className="text-left"> Click the game name and reach all popular live streams which is related game </h5>
                     <Slider {...SliderSettings}>
@@ -150,7 +150,7 @@ class LiveNow extends Component {
                             />
                         </div>
                         :
-                        <div className="jumbotron">
+                        <div className="jumbotron" style={{padding:50}}>
                             {this.state.gameName !== '' && <h3 className="text-left">They are streaming for {this.state.gameName} </h3>}
                             {this.state.gameName !== '' && <h5 className="text-left">Just click on the stream name which is you want to watch </h5>}
                             <Slider {...SliderSettings}>

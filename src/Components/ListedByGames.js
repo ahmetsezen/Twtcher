@@ -95,7 +95,7 @@ class ListedByGames extends Component {
                         </ModalBody>
                     </Modal>
                 </div>
-                <div className="jumbotron">
+                <div className="jumbotron" style={{padding:50}}>
                     <h3 className="text-left"> Top Streamers for {this.state.gameName} </h3>
                     <h5 className="text-left"> Now, They are streaming for {this.state.gameName} </h5>
                     <Slider {...SliderSettings}>

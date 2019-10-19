@@ -139,7 +139,7 @@ class ClipsComponent extends Component {
                         </ModalBody>
                     </Modal>
                 </div>
-                <div className="jumbotron">
+                <div className="jumbotron" style={{padding:50}}>
                     <h3 className="text-left"> Select the game</h3>
                     <Select
                         value={this.state.selectedOption}
@@ -160,7 +160,7 @@ class ClipsComponent extends Component {
                             />
                         </div>
                         :
-                        <div className="jumbotron">
+                        <div className="jumbotron" style={{padding:50}}>
                             {this.state.gameName !== '' && <h3 className="text-left"> Most Popular Clips for {this.state.gameName} </h3>}
                             {this.state.gameName !== '' && <h5 className="text-left"> Just click on the clip name which clip you want to watch </h5>}
                             <Slider {...SliderSettings}>
