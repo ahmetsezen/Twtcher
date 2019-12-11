@@ -2,6 +2,10 @@
 
 ## Live: https://kind-stallman-de49d6.netlify.com/
 
+or
+
+## Live: http://ahmetsezen.com/twitcher/
+
 In the project directory, you can run:
 
 ### `npm install`
