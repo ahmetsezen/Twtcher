@@ -1,5 +1,6 @@
 export const ApiConfig = {
     headers: {
-        "Client-ID": "5chkm8twab1bixb2mujodppq4abjtn",
+        "Client-ID": "gp762nuuoqcoxypju8c569th9wz7q5",
+        "Authorization": "Bearer ck03jhd52zb5737areyp942l9mnfs3"
     }
 }
