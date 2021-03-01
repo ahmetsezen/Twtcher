@@ -1,10 +1,7 @@
 ## Simple Twitch clone project made with React using Twitch Helix API
 
-## Live: https://kind-stallman-de49d6.netlify.com/
+## Live: https://twitcher.netlify.app/
 
-or
-
-## Live: http://ahmetsezen.com/twitcher/
 
 In the project directory, you can run:
 
