@@ -5,7 +5,7 @@ class Header extends Component {
         return (
                 <header style={{marginBottom:25}}>
                     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                        <Link className="navbar-brand" style={{color:'#9147FF'}} to="/">Twitcher</Link>
+                        <Link to='' className="navbar-brand" style={{color:'#9147FF'}} to="/">Twitcher</Link>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                         </button>

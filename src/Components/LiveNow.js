@@ -6,7 +6,7 @@ import ReactTwitchEmbedVideo from "react-twitch-embed-video";
 import { Modal, ModalBody } from 'reactstrap';
 import { URL } from '../Api/URL';
 import { ApiConfig } from '../Api/ApiConfig';
-import Loader from 'react-loader-spinner';
+import { Rings } from 'react-loader-spinner';
 class LiveNow extends Component {
     state = {
         topStreamers: [],
@@ -131,7 +131,7 @@ class LiveNow extends Component {
                             Object.entries(this.state.topGames).map(([key, game]) => (
                                 <div key={key} className="card">
                                     <img data-toggle="tooltip" title="Click the text" data-placement="top" style={{ padding: 5 }} src={game.box_art_url} width="100%" height="250vm" alt={game.name} />
-                                    <Link onClick={() => this.getStreamsByGame(game.id)} style={{ textDecoration: 'none' }}>
+                                    <Link to='' onClick={() => this.getStreamsByGame(game.id)} style={{ textDecoration: 'none' }}>
                                         <h5 className="card-title" >{game.name}</h5>
                                     </Link>
                                 </div>
@@ -142,11 +142,11 @@ class LiveNow extends Component {
                 {
                     this.state.loading === true ?
                         <div className="text-center">
-                            <Loader
-                                type="Puff"
-                                color="#9147ff"
-                                height={100}
-                                width={100}
+                            <Rings
+                                height="100"
+                                width="100"
+                                color='grey'
+                                ariaLabel='#9147ff'
                             />
                         </div>
                         :
@@ -158,7 +158,7 @@ class LiveNow extends Component {
                                     Object.entries(this.state.topStreamers).map(([key, streamer]) => (
                                         <div key={key} className="card">
                                             <img style={{ padding: 5, position: 'relative', display: "block" }} src={streamer.box_art_url} width="100%" height="250vm" alt={streamer.user_name} />
-                                            <Link onClick={() => this.getStreamContent(streamer.user_name)} style={{ textDecoration: 'none' }}>
+                                            <Link to='' onClick={() => this.getStreamContent(streamer.user_name)} style={{ textDecoration: 'none' }}>
                                                 <h5 className="card-title">{streamer.title}</h5>
                                             </Link>
                                         </div>

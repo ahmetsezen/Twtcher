@@ -103,7 +103,7 @@ class ListedByGames extends Component {
                             Object.entries(this.state.topStreamers).map(([key, streamer]) => (
                                 <div key={streamer.user_name} className="card" >
                                     <img style={{ padding: 5, position: 'relative' }} src={streamer.box_art_url} width="100%" height="200vm" alt={streamer.user_name} />
-                                    <Link onClick={() => this.getStreamContent(streamer.user_name)} style={{ textDecoration: 'none' }}>
+                                    <Link to='' onClick={() => this.getStreamContent(streamer.user_name)} style={{ textDecoration: 'none' }}>
                                         <h5 className="card-title" >{streamer.title}</h5>
                                     </Link>
                                 </div>

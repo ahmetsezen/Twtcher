@@ -4,7 +4,7 @@ import axios from 'axios';
 import Slider from "react-slick";
 import { Modal, ModalBody } from 'reactstrap';
 import Select from 'react-select'
-import Loader from 'react-loader-spinner'
+import { Rings } from 'react-loader-spinner'
 import { ApiConfig } from '../Api/ApiConfig';
 import { URL } from '../Api/URL';
 class ClipsComponent extends Component {
@@ -152,11 +152,11 @@ class ClipsComponent extends Component {
                 {
                     this.state.loading === true ?
                         <div className="text-center">
-                            <Loader
-                                type="Puff"
-                                color="#9147ff"
-                                height={100}
-                                width={100}
+                            <Rings
+                                height="100"
+                                width="100"
+                                color='grey'
+                                ariaLabel='#9147ff'
                             />
                         </div>
                         :
@@ -168,7 +168,7 @@ class ClipsComponent extends Component {
                                     Object.entries(this.state.topStreamers).map(([key, streamer]) => (
                                         <div key={key} className="card" >
                                             <img style={{ padding: 5, position: 'relative' }} src={streamer.box_art_url} width="100%" height="200vm" alt={streamer.user_name} />
-                                            <Link onClick={() => this.embedVideo(streamer.embed_url)}  style={{ textDecoration: 'none' }}>
+                                            <Link to='' onClick={() => this.embedVideo(streamer.embed_url)}  style={{ textDecoration: 'none' }}>
                                                 <h5 className="card-title" >{streamer.title}</h5>
                                             </Link>
                                         </div>

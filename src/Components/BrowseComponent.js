@@ -6,6 +6,40 @@ import axios from 'axios';
 import Slider from "react-slick";
 import { URL } from '../Api/URL';
 import { ApiConfig } from '../Api/ApiConfig';
+let SliderSettings = {
+    touchMove: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    initialSlide: 0,
+    margin: 2,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+            }
+        },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                initialSlide: 2
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+        }
+    ]
+};
 class BrowseComponent extends Component {
     state = {
         topStreamers: [],
@@ -65,40 +99,7 @@ class BrowseComponent extends Component {
 
     }
     render() {
-        var SliderSettings = {
-            touchMove: true,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 4,
-            slidesToScroll: 4,
-            initialSlide: 0,
-            margin: 2,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                        infinite: true,
-                    }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2,
-                        initialSlide: 2
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
-        };
+       
 
         return (
             <div>
@@ -132,10 +133,10 @@ class BrowseComponent extends Component {
                     <Slider {...SliderSettings}>
                         {
                             Object.entries(this.state.topStreamers).map(([key, streamer]) => (
-                                <div className="card">
+                                <div  key={key} className="card">
                                     <img style={{ padding: 5, position: 'relative', display: "block" }} src={streamer.box_art_url} width="100%" height="250vm" alt={streamer.user_name} />
 
-                                    <Link onClick={() => this.getStreamContent(streamer.user_id)} style={{ textDecoration: 'none' }}>
+                                    <Link to='' onClick={() => this.getStreamContent(streamer.user_id)} style={{ textDecoration: 'none' }}>
                                         <h5 className="card-title" >{streamer.title}</h5>
                                     </Link>
                                 </div>

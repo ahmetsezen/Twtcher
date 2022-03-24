@@ -1,3 +1,5 @@
+$base-color: #9147ff;
+
 html {
     overflow-y: scroll; 
 }
@@ -7,7 +9,7 @@ h3 {
   padding:5px;
 }
 h5 {
-    color:#9147ff;
+    color: $base-color;
     padding:5px;
 }
 .card {
@@ -15,7 +17,7 @@ h5 {
 }
 .card:hover{
     cursor: pointer;
-    background-color: #9147ff;
+    background-color: $base-color;;
     h5 {
         color:white;
     }
