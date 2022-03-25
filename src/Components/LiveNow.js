@@ -26,7 +26,7 @@ class LiveNow extends Component {
         axios.get(`${URL}/streams?game_id=${gameId}`, ApiConfig)
             .then(response => {
                 let dataArray = response.data.data;
-                let finalArray = dataArray.map(game => {
+                dataArray.map(game => {
                     let newURL = game.thumbnail_url.replace('{width}', '300').replace('{height}', '300')
                     game.box_art_url = newURL
                     var usernameChanges = game.thumbnail_url.split(["live_user_"]);
@@ -62,7 +62,7 @@ class LiveNow extends Component {
         axios.get(`${URL}/games/top`, ApiConfig)
             .then(response => {
                 let dataArray = response.data.data;
-                let finalArray = dataArray.map(game => {
+                dataArray.map(game => {
                     let sizing = game.box_art_url.replace('{width}', '300').replace('{height}', '300')
                     game.box_art_url = sizing
                 })
