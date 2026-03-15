@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import Header from '../Components/Header'
-import ClipsComponent from '../Components/ClipsComponent'
-import Footer from '../Components/Footer'
+import ClipsComponent from '../components/ClipsComponent'
 class Home extends Component {
     render() {
         return (
             <div className="container">
-                <Header />
+                
                 <ClipsComponent />
-                <Footer />
+                
             </div>
         )
     }

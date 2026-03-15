@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import Header from '../Components/Header'
-import Footer from '../Components/Footer'
-import ListedByGames from '../Components/ListedByGames'
+import ListedByGames from '../components/ListedByGames'
 import {useParams} from 'react-router-dom'
 
 class BrowseByGames extends Component {
@@ -9,9 +7,9 @@ class BrowseByGames extends Component {
         const gameId  = this.props.id
         return (
             <div className="container">
-                <Header />
+                
                 <ListedByGames gameId={gameId}/>
-                <Footer />
+                
             </div>
         )
     }

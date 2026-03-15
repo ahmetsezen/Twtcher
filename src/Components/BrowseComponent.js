@@ -1,152 +1,137 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTwitchEmbedVideo from "react-twitch-embed-video"
-import { Modal, ModalBody } from 'reactstrap';
 import axios from 'axios';
 import Slider from "react-slick";
-import { URL } from '../Api/URL';
-import { ApiConfig } from '../Api/ApiConfig';
-let SliderSettings = {
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { URL } from '../api/URL';
+import { ApiConfig } from '../api/ApiConfig';
+import '../App.scss';
+
+const SliderSettings = {
     touchMove: true,
     infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
-    initialSlide: 0,
-    margin: 2,
+    margin: 10,
     responsive: [
-        {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
-                infinite: true,
-            }
-        },
-        {
-            breakpoint: 600,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2,
-                initialSlide: 2
-            }
-        },
-        {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-        }
+        { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+        { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
     ]
 };
-class BrowseComponent extends Component {
-    state = {
-        topStreamers: [],
-        topGames: [],
-        embedVideo: "",
-        open: false,
-    }
 
-    onOpenModal = () => {
-        this.setState({ open: true });
-    };
+const BrowseComponent = () => {
+    const [topGames, setTopGames] = useState([]);
+    const [topStreamers, setTopStreamers] = useState([]);
+    const [embedVideo, setEmbedVideo] = useState("");
+    const [openModal, setOpenModal] = useState(false);
 
-    onCloseModal = () => {
-        this.setState({ open: false });
-    };
-
-    getStreamContent = (embedVideo) => {
-        this.setState({ open: true });
-        this.setState({ embedVideo: embedVideo });
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         axios.get(`${URL}/games/top`, ApiConfig)
             .then(response => {
-
-                let dataArray = response.data.data;
-                let finalArray = dataArray.map(game => {
-                    let newURL = game.box_art_url.replace('{width}', '300').replace('{height}', '300')
-                    game.box_art_url = newURL
-                })
-                this.setState({ topGames: dataArray });
-              
+                let dataArray = response.data.data.map(game => ({
+                    ...game,
+                    box_art_url: game.box_art_url.replace('{width}', '300').replace('{height}', '300')
+                }));
+                setTopGames(dataArray);
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+            .catch(error => console.log(error));
+
         axios.get(`${URL}/streams`, ApiConfig)
             .then(response => {
-
-                let dataArray = response.data.data;
-                let finalArray = dataArray.map(game => {
-                    let newURL = game.thumbnail_url.replace('{width}', '300').replace('{height}', '300')
-                    game.box_art_url = newURL
-                    var usernameChanges = game.thumbnail_url.split(["live_user_"]);
-                    var usernameChangesv1 = usernameChanges[1].split(["-"])
-                    var usernameChangesv2 = usernameChangesv1[0]
-                    game.user_id = usernameChangesv2
-                    var titleChanges = game.title.slice(0, 35)
-                    game.title = titleChanges
-                })
-                this.setState({ topStreamers: dataArray });
-              
+                let dataArray = response.data.data.map(stream => {
+                    let newURL = stream.thumbnail_url.replace('{width}', '300').replace('{height}', '300');
+                    let usernameChanges = stream.thumbnail_url.split("live_user_");
+                    let user_id = stream.user_name; // Fallback to user_name instead of parsing url hack
+                    if (usernameChanges.length > 1) {
+                         user_id = usernameChanges[1].split("-")[0];
+                    }
+                    return {
+                        ...stream,
+                        box_art_url: newURL,
+                        user_id: user_id,
+                        title: stream.title.slice(0, 45) + (stream.title.length > 45 ? '...' : '')
+                    };
+                });
+                setTopStreamers(dataArray);
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+            .catch(error => console.log(error));
+    }, []);
 
-    }
-    render() {
-       
+    const openStream = (videoId) => {
+        setEmbedVideo(videoId);
+        setOpenModal(true);
+    };
 
-        return (
-            <div>
-                <div>
-                    <Modal toggle={this.onCloseModal}returnFocusAfterClose={false} fade={true} size={"lg"} isOpen={this.state.open} >
-                        <ModalBody>
-                            <p onClick={this.onCloseModal} className="text-right" style={{ cursor: 'pointer', fontSize: 20 }}>X</p>
-                            <ReactTwitchEmbedVideo theme={"dark"} layout="video" width="100%" channel={this.state.embedVideo} />
-                        </ModalBody>
-                    </Modal>
+    return (
+        <div className="component-container">
+            {openModal && (
+                <div className="modern-modal-overlay" onClick={() => setOpenModal(false)}>
+                    <div className="modern-modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="close-btn" onClick={() => setOpenModal(false)}>✕</button>
+                        <ReactTwitchEmbedVideo theme="dark" layout="video" width="100%" height="600px" channel={embedVideo} />
+                    </div>
                 </div>
-                <div className="jumbotron" style={{padding:50}}>
-                    <h3 className="text-left"> Most Popular Games </h3>
-                    <h5 className="text-left"> Click the game name and reach all popular live streams which is related game </h5>
-                    <Slider {...SliderSettings}>
-                        {
-                            Object.entries(this.state.topGames).map(([key, game]) => (
-                                <div className="card">
-                                    <img data-toggle="tooltip" title="Click the text" data-placement="top" style={{ padding: 5 }} src={game.box_art_url} width="100%" height="250vm" alt={game.name} />
-                                    <Link to={`/browse/games/${game.id}`} style={{ textDecoration: 'none' }}>
-                                        <h5 className="card-title" >{game.name}</h5>
-                                    </Link>
-                                </div>
-                            ))
-                        }
-                    </Slider>
-                </div>
-                <div className="jumbotron" style={{padding:50}}>
-                    <h3 className="text-left">Most Popular Streamers </h3>
-                    <h5 className="text-left">Just click on the stream name which is you want to watch </h5>
-                    <Slider {...SliderSettings}>
-                        {
-                            Object.entries(this.state.topStreamers).map(([key, streamer]) => (
-                                <div  key={key} className="card">
-                                    <img style={{ padding: 5, position: 'relative', display: "block" }} src={streamer.box_art_url} width="100%" height="250vm" alt={streamer.user_name} />
+            )}
 
-                                    <Link to='' onClick={() => this.getStreamContent(streamer.user_id)} style={{ textDecoration: 'none' }}>
-                                        <h5 className="card-title" >{streamer.title}</h5>
-                                    </Link>
+            <div className="section-container">
+                <h2 className="section-title">Most Popular Games</h2>
+                <p className="section-subtitle">Click the game name to find popular live streams for it</p>
+                <div className="slider-container">
+                    {topGames.length > 0 ? (
+                        <Slider {...SliderSettings}>
+                            {topGames.map((game, i) => (
+                                <div key={i} className="slider-item">
+                                    <div className="modern-card">
+                                        <div className="img-wrapper">
+                                            <img src={game.box_art_url} alt={game.name} />
+                                        </div>
+                                        <Link to={`/browse/games/${game.id}`} className="card-link">
+                                            <h5 className="card-title">{game.name}</h5>
+                                        </Link>
+                                    </div>
                                 </div>
-                            ))
-                        }
-                    </Slider>
+                            ))}
+                        </Slider>
+                    ) : (
+                        <p className="loading-text">Loading popular games...</p>
+                    )}
                 </div>
             </div>
-        )
-    }
-}
 
-export default BrowseComponent
+            <div className="section-container">
+                <h2 className="section-title">Most Popular Streamers</h2>
+                <p className="section-subtitle">Click on the stream to watch it live</p>
+                <div className="slider-container">
+                    {topStreamers.length > 0 ? (
+                        <Slider {...SliderSettings}>
+                            {topStreamers.map((streamer, i) => (
+                                <div key={i} className="slider-item">
+                                    <div className="modern-card">
+                                        <div className="img-wrapper" onClick={() => openStream(streamer.user_id)}>
+                                            <img src={streamer.box_art_url} alt={streamer.user_name} />
+                                            <div className="play-overlay">
+                                               <span>▶ Play</span>
+                                            </div>
+                                        </div>
+                                        <div className="card-info" onClick={() => openStream(streamer.user_id)}>
+                                            <h5 className="card-title">{streamer.title}</h5>
+                                            <p className="card-subtitle">{streamer.user_name}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </Slider>
+                    ) : (
+                        <p className="loading-text">Loading popular streamers...</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default BrowseComponent;

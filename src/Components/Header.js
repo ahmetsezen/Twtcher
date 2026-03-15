@@ -1,37 +1,24 @@
-import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom'
-class Header extends Component {
-    render() {
-        return (
-                <header style={{marginBottom:25}}>
-                    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                        <Link to='' className="navbar-brand" style={{color:'#9147FF'}} to="/">Twitcher</Link>
-                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarcollapse">
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item" >
-                                <NavLink exact className="nav-link" to="/">
-                                    Home
-                                </NavLink>
-                                </li>
-                                <li className="nav-item" >
-                                <NavLink className="nav-link" to="/browse">
-                                    Browse
-                                </NavLink>
-                                </li>
-                                <li className="nav-item">
-                                <NavLink className="nav-link" to="/clips">
-                                    Clips
-                                </NavLink>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </header>
-        )
-    }
-}
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 
-export default Header
+const Header = () => {
+  return (
+    <header className="modern-header">
+      <Link to="/" className="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        Twtcher
+      </Link>
+      <nav className="nav-links">
+        <NavLink exact="true" className="nav-item" to="/">Home</NavLink>
+        <NavLink className="nav-item" to="/browse">Browse</NavLink>
+        <NavLink className="nav-item" to="/clips">Clips</NavLink>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;

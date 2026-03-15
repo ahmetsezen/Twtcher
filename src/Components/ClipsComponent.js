@@ -1,187 +1,168 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from "react-slick";
-import { Modal, ModalBody } from 'reactstrap';
-import Select from 'react-select'
-import { Rings } from 'react-loader-spinner'
-import { ApiConfig } from '../Api/ApiConfig';
-import { URL } from '../Api/URL';
-class ClipsComponent extends Component {
+import Select from 'react-select';
+import { Rings } from 'react-loader-spinner';
+import { ApiConfig } from '../api/ApiConfig';
+import { URL } from '../api/URL';
 
-    state = {
-        topStreamers: [],
-        gameName: '',
-        open: false,
-        games: [],
-        selectedOption: null,
-        clipView: '',
-        loading: false,
-    }
+const SliderSettings = {
+    touchMove: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    margin: 10,
+    responsive: [
+        { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+        { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
+    ]
+};
 
-    embedVideo = (deneme) => {
-        this.setState({ open: true });
-        this.setState({ clipView: deneme });
+const customStyles = {
+    control: (base) => ({
+        ...base,
+        background: 'rgba(30, 41, 59, 0.7)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        color: '#f8fafc',
+        borderRadius: '16px',
+        padding: '5px',
+        boxShadow: 'none',
+        '&:hover': {
+            border: '1px solid rgba(139, 92, 246, 0.5)'
+        }
+    }),
+    singleValue: (base) => ({ ...base, color: '#f8fafc' }),
+    menu: (base) => ({
+        ...base,
+        background: 'rgba(15, 23, 42, 0.95)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '16px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        overflow: 'hidden'
+    }),
+    option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? '#8b5cf6' : (state.isFocused ? 'rgba(139, 92, 246, 0.2)' : 'transparent'),
+        color: '#f8fafc',
+        cursor: 'pointer',
+        padding: '10px 15px',
+    }),
+};
+
+const ClipsComponent = () => {
+    const [topStreamers, setTopStreamers] = useState([]);
+    const [gameName, setGameName] = useState('');
+    const [games, setGames] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [clipView, setClipView] = useState('');
+    const [openModal, setOpenModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        axios.get(`${URL}/games/top`, ApiConfig)
+            .then(response => {
+                setGames(response.data.data);
+            })
+            .catch(error => console.log(error));
+    }, []);
+
+    const handleChange = option => {
+        setSelectedOption(option);
+        getClips(option.value, option.value);
     };
-    handleChange = selectedOption => {
-        this.setState({ selectedOption: selectedOption });
-        this.getClips(selectedOption.value, selectedOption.value);
 
-    };
-    onCloseModal = () => {
-        this.setState({ open: false });
-    };
-
-
-    getClips = (selectedGameId, iki) => {
-        this.setState({ loading: true });
+    const getClips = (selectedGameId, iki) => {
+        setLoading(true);
         axios.get(`${URL}/clips?game_id=${selectedGameId}`, ApiConfig)
             .then(response => {
-                let dataArray = response.data.data;
-                let finalArray = dataArray.map(game => {
-                    let newURL = game.thumbnail_url.replace('{width}', '300').replace('{height}', '300')
-                    game.box_art_url = newURL
-                })
-                this.setState({ topStreamers: dataArray });
+                let dataArray = response.data.data.map(game => ({
+                    ...game,
+                    box_art_url: game.thumbnail_url.replace('{width}', '300').replace('{height}', '300')
+                }));
+                setTopStreamers(dataArray);
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+            .catch(error => console.log(error));
 
         axios.get(`${URL}/games?id=${iki}`, ApiConfig)
             .then(response => {
-                this.setState({ gameName: response.data.data[0].name })
-                this.setState({ loading: false });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-    }
-
-    componentDidMount() {
-        axios.get(`${URL}/games/top`, ApiConfig)
-            .then(response => {
-                this.setState({ games: response.data.data });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-
-
-    render() {
-        const options = this.state.games.map(game => ({
-            label: game.name,
-            value: game.id
-        }));
-        const customStyles = {
-            option: (provided, state) => ({
-                ...provided,
-                borderBottom: '5px solid pink',
-                color: state.isSelected ? 'white' : 'black',
-                ':active': {
-                    backgroundColor: !state.isSelected && (state.isSelected ? '#9147ff' : '#9147ff'),
-                },
-                backgroundColor: state.isSelected ? '#9147ff' : 'white',
-            }),
-
-            singleValue: (provided, state) => {
-                const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = 'opacity 300ms';
-
-                return { ...provided, opacity, transition };
-            }
-        }
-        var SliderSettings = {
-
-            infinite: true,
-            speed: 500,
-            slidesToShow: 4,
-            slidesToScroll: 4,
-            initialSlide: 0,
-            margin: 2,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                        infinite: true,
-                        dots: true
-                    }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2,
-                        initialSlide: 2
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
+                if(response.data.data.length > 0) {
+                    setGameName(response.data.data[0].name);
                 }
-            ]
-        };
-        return (
-            <div >
-                <div>
-                    <Modal toggle={this.onCloseModal}returnFocusAfterClose={false} fade={true} size={"lg"} isOpen={this.state.open} >
-                        <ModalBody>
-                            <p onClick={this.onCloseModal} className="text-right" style={{ cursor: 'pointer', fontSize: 20 }}>X</p>
-                            <iframe title={this.state.gameName} key={this.state.clipView} className="resp-iframe" src={this.state.clipView} allowFullScreen={true} width="100%" height="400" />
-                        </ModalBody>
-                    </Modal>
-                </div>
-                <div className="jumbotron" style={{padding:50}}>
-                    <h3 className="text-left"> Select the game</h3>
-                    <Select
-                        value={this.state.selectedOption}
-                        onChange={this.handleChange}
-                        options={options}
-                        styles={customStyles}
+                setLoading(false);
+            })
+            .catch(error => console.log(error));
+    };
 
+    const openStream = (embedUrl) => {
+        setClipView(embedUrl);
+        setOpenModal(true);
+    };
+
+    return (
+        <div className="component-container">
+            {openModal && (
+                <div className="modern-modal-overlay" onClick={() => setOpenModal(false)}>
+                    <div className="modern-modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="close-btn" onClick={() => setOpenModal(false)}>✕</button>
+                        <iframe title={gameName} className="resp-iframe" src={clipView} allowFullScreen={true} width="100%" height="600" style={{border: 'none'}} />
+                    </div>
+                </div>
+            )}
+
+            <div className="section-container">
+                <h2 className="section-title">Select a Game</h2>
+                <div style={{ marginBottom: '2rem' }}>
+                    <Select
+                        value={selectedOption}
+                        onChange={handleChange}
+                        options={games.map(game => ({ label: game.name, value: game.id }))}
+                        styles={customStyles}
+                        placeholder="Search for a game..."
                     />
                 </div>
-                {
-                    this.state.loading === true ?
-                        <div className="text-center">
-                            <Rings
-                                height="100"
-                                width="100"
-                                color='grey'
-                                ariaLabel='#9147ff'
-                            />
+                
+                {loading ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', margin: '4rem 0' }}>
+                        <Rings height="100" width="100" color="#8b5cf6" ariaLabel="loading" />
+                    </div>
+                ) : (
+                    gameName && (
+                        <div className="section-container">
+                            <h3 className="section-title">Most Popular Clips for {gameName}</h3>
+                            <p className="section-subtitle">Click to watch the clip</p>
+                            <div className="slider-container">
+                                {topStreamers.length > 0 ? (
+                                    <Slider {...SliderSettings}>
+                                        {topStreamers.map((streamer, i) => (
+                                            <div key={i} className="slider-item">
+                                                <div className="modern-card">
+                                                    <div className="img-wrapper" onClick={() => openStream(streamer.embed_url)}>
+                                                        <img src={streamer.box_art_url} alt={streamer.user_name} />
+                                                        <div className="play-overlay">
+                                                           <span>▶ Play</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="card-info" onClick={() => openStream(streamer.embed_url)}>
+                                                        <h5 className="card-title">{streamer.title}</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </Slider>
+                                ) : (
+                                    <p className="loading-text">No clips found.</p>
+                                )}
+                            </div>
                         </div>
-                        :
-                        <div className="jumbotron" style={{padding:50}}>
-                            {this.state.gameName !== '' && <h3 className="text-left"> Most Popular Clips for {this.state.gameName} </h3>}
-                            {this.state.gameName !== '' && <h5 className="text-left"> Just click on the clip name which clip you want to watch </h5>}
-                            <Slider {...SliderSettings}>
-                                {
-                                    Object.entries(this.state.topStreamers).map(([key, streamer]) => (
-                                        <div key={key} className="card" >
-                                            <img style={{ padding: 5, position: 'relative' }} src={streamer.box_art_url} width="100%" height="200vm" alt={streamer.user_name} />
-                                            <Link to='' onClick={() => this.embedVideo(streamer.embed_url)}  style={{ textDecoration: 'none' }}>
-                                                <h5 className="card-title" >{streamer.title}</h5>
-                                            </Link>
-                                        </div>
-                                    ))
-                                }
-                            </Slider>
-                        </div>
-
-                }
+                    )
+                )}
             </div>
+        </div>
+    );
+};
 
-        )
-    }
-}
-
-export default ClipsComponent
+export default ClipsComponent;

@@ -1,0 +1,34 @@
+// Modern Color Palette & Design Tokens
+$bg-color: #0f172a;
+$surface-color: rgba(30, 41, 59, 0.7);
+$surface-hover: rgba(51, 65, 85, 0.8);
+$primary-color: #8b5cf6;
+$primary-hover: #7c3aed;
+$accent-color: #0ea5e9;
+$text-primary: #f8fafc;
+$text-secondary: #94a3b8;
+$border-radius: 16px;
+$glass-border: 1px solid rgba(255, 255, 255, 0.1);
+$glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+$transition-fast: 0.2s ease-in-out;
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin glassmorphism {
+  background: $surface-color;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: $glass-border;
+  border-radius: $border-radius;
+  box-shadow: $glass-shadow;
+}
+
+@mixin modern-gradient {
+  background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
+}
+
+@mixin text-gradient {
+  background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
