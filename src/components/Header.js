@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMenu = () => setIsMobileMenuOpen(false);
+
   return (
     <header className="modern-header">
-      <Link to="/" className="brand">
+      <Link to="/" className="brand" onClick={closeMenu}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
           <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -12,10 +17,17 @@ const Header = () => {
         </svg>
         Twtcher
       </Link>
-      <nav className="nav-links">
-        <NavLink exact="true" className="nav-item" to="/">Home</NavLink>
-        <NavLink className="nav-item" to="/browse">Browse</NavLink>
-        <NavLink className="nav-item" to="/clips">Clips</NavLink>
+      
+      <div className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
+        <span className="bar"></span>
+        <span className="bar"></span>
+        <span className="bar"></span>
+      </div>
+
+      <nav className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+        <NavLink exact="true" className="nav-item" to="/" onClick={closeMenu}>Home</NavLink>
+        <NavLink className="nav-item" to="/browse" onClick={closeMenu}>Browse</NavLink>
+        <NavLink className="nav-item" to="/clips" onClick={closeMenu}>Clips</NavLink>
       </nav>
     </header>
   );
